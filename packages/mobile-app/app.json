@@ -1,0 +1,6 @@
+{
+  "name": "Storycraft",
+  "slug": "storycraft",
+  "version": "1.0.0",
+  "entryPoint": "src/App.tsx"
+}
