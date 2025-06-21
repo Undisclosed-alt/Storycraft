@@ -1,15 +1,20 @@
-export interface Story {
-  id: string;
-  title: string;
-}
+import { z } from 'zod';
 
-export interface Node {
-  id: string;
-  storyId: string;
-  text: string;
-}
+export const StorySchema = z.object({
+  id: z.string(),
+  title: z.string(),
+});
+export type Story = z.infer<typeof StorySchema>;
 
-export interface Action {
-  label: string;
-  targetId: string;
-}
+export const NodeSchema = z.object({
+  id: z.string(),
+  storyId: z.string(),
+  text: z.string(),
+});
+export type Node = z.infer<typeof NodeSchema>;
+
+export const ActionSchema = z.object({
+  label: z.string(),
+  targetId: z.string(),
+});
+export type Action = z.infer<typeof ActionSchema>;
