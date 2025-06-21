@@ -9,4 +9,4 @@ This repo contains the Storycraft branching gamebook editor and mobile app.
 
 To install dependencies run `pnpm install`.
 
-The Supabase schema is located in `supabase/schema.sql`.
+Supabase migrations are located in `supabase/migrations`.
