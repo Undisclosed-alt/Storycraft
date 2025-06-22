@@ -21,3 +21,29 @@ jobs:
       - run: pnpm --filter shared-types build
       - run: pnpm --filter editor-web build
       - run: pnpm --filter mobile-app build
+      - name: Set up Expo
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Run EAS build (preview)
+        working-directory: packages/mobile-app
+        run: eas build --profile preview --platform all --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        if: github.event_name == 'pull_request'
+      - name: Run EAS build (production)
+        working-directory: packages/mobile-app
+        run: eas build --profile production --platform all --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-args: '--prod'
+          working-directory: packages/editor-web
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
