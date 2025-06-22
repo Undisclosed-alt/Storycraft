@@ -17,7 +17,7 @@ GitHub Actions builds the packages and can deploy previews. Mobile builds run
 through **Expo EAS** while the web editor deploys to **Vercel**. Provide the
 following repository secrets:
 
-- `EAS_ACCESS_TOKEN` – Expo token for `eas build`.
+ - `EXPO_TOKEN` – Expo token for `eas build`.
 - `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` – Vercel deployment
   credentials.
 

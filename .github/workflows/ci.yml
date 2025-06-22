@@ -25,14 +25,18 @@ jobs:
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
-          token: ${{ secrets.EAS_ACCESS_TOKEN }}
+          token: ${{ secrets.EXPO_TOKEN }}
       - name: Run EAS build (preview)
         working-directory: packages/mobile-app
         run: eas build --profile preview --platform all --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         if: github.event_name == 'pull_request'
       - name: Run EAS build (production)
         working-directory: packages/mobile-app
         run: eas build --profile production --platform all --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       - name: Deploy to Vercel
         uses: amondnet/vercel-action@v25
