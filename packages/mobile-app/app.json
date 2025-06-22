@@ -1,26 +1,21 @@
 {
-  "name": "Storycraft",
-  "slug": "storycraft",
-  "version": "1.0.0",
-  "entryPoint": "src/App.tsx",
-  "extra": {
-    "eas": {
-      "projectId": "44419362-f1d0-4ee2-a4ce-3b93532ef2af"
-    }
-  },
   "expo": {
+    "name": "Storycraft",
+    "slug": "storycraft",
+    "version": "1.0.0",
+    "entryPoint": "src/App.tsx",
     "android": {
       "package": "com.undisclosedalt09.storycraft"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "49bc6677-be14-428d-9be1-15827adb0688"
-      }
     },
     "ios": {
       "bundleIdentifier": "com.undisclosedalt09.storycraft",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "44419362-f1d0-4ee2-a4ce-3b93532ef2af"
       }
     }
   }
