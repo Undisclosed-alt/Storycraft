@@ -12,5 +12,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "expo": "^50.0.0",
+    "react": "^19.1.0",
+    "react-native": "0.73.4"
+  }
 }
