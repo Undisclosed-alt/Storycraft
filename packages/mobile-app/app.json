@@ -2,5 +2,10 @@
   "name": "Storycraft",
   "slug": "storycraft",
   "version": "1.0.0",
-  "entryPoint": "src/App.tsx"
+  "entryPoint": "src/App.tsx",
+  "extra": {
+    "eas": {
+      "projectId": "44419362-f1d0-4ee2-a4ce-3b93532ef2af"
+    }
+  }
 }
