@@ -9,6 +9,10 @@ This repo contains the Storycraft branching gamebook editor and mobile app.
 
 To install dependencies run `pnpm install`.
 
+EAS configuration (`eas.json`) lives at the repository root. When running
+`eas build` in CI the working directory is `packages/mobile-app`, but the CLI
+will automatically detect the root config.
+
 Supabase migrations are located in `supabase/migrations`.
 
 ## Continuous Deployment

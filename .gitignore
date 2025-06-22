@@ -1,5 +1,11 @@
 node_modules
-pnpm-lock.yaml
+# The lockfile should be committed
+# to ensure reproducible installs
+# across CI and local setups.
+# See https://pnpm.io/lockfile
+#
+# Remove this line if present:
+#pnpm-lock.yaml
 .DS_Store
 packages/*/dist
 
