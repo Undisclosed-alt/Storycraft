@@ -3,6 +3,11 @@
     "jsx": "react-native",
     "allowJs": true,
     "strict": true,
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "node",
+    "target": "ES2017",
+    "noEmit": true,
+    "types": ["react-native", "expo"],
+    "skipLibCheck": true
+  },
+  "include": ["src"]
 }
