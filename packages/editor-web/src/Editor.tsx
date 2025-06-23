@@ -17,6 +17,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 import Sidebar from './Sidebar';
 import { ReactFlowProvider } from 'reactflow';
+import ImageUpload from './ImageUpload';
+import ExportPanel from './ExportPanel';
 
 export default function Editor() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
@@ -199,45 +201,46 @@ export default function Editor() {
             <Background />
           </ReactFlow>
         </div>
-        {selected && (
-          <div className="w-64 border-l p-2 space-y-2">
-            <textarea
-              className="w-full border p-1"
-              rows={6}
-              value={(selected.data as any).label}
-              onChange={(e) =>
-                setNodes((nds) =>
-                  nds.map((n) =>
-                    n.id === selected.id
-                      ? { ...n, data: { ...n.data, label: e.target.value } }
-                      : n
+        <div className="w-64 border-l flex flex-col">
+          {selected && (
+            <div className="p-2 space-y-2 flex-1 overflow-auto">
+              <textarea
+                className="w-full border p-1"
+                rows={6}
+                value={(selected.data as any).label}
+                onChange={(e) =>
+                  setNodes((nds) =>
+                    nds.map((n) =>
+                      n.id === selected.id
+                        ? { ...n, data: { ...n.data, label: e.target.value } }
+                        : n
+                    )
                   )
-                )
-              }
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                const path = `${selected.id}/${file.name}`;
-                await supabase.storage.from('images').upload(path, file);
-                const { data } = supabase.storage.from('images').getPublicUrl(path);
-                setNodes((nds) =>
-                  nds.map((n) =>
-                    n.id === selected.id
-                      ? { ...n, data: { ...n.data, image: data.publicUrl } }
-                      : n
+                }
+              />
+              <ImageUpload
+                nodeId={selected.id}
+                onUrl={(url) =>
+                  setNodes((nds) =>
+                    nds.map((n) =>
+                      n.id === selected.id
+                        ? { ...n, data: { ...n.data, image: url } }
+                        : n
+                    )
                   )
-                );
-              }}
-            />
-            {(selected.data as any).image && (
-              <img src={(selected.data as any).image} alt="" className="w-full" />
-            )}
-          </div>
-        )}
+                }
+              />
+              {(selected.data as any).image && (
+                <img
+                  src={(selected.data as any).image}
+                  alt=""
+                  className="w-full"
+                />
+              )}
+            </div>
+          )}
+          <ExportPanel nodes={nodes} edges={edges} />
+        </div>
       </div>
     </ReactFlowProvider>
   );
