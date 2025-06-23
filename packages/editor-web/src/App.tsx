@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Auth, ThemeSupa } from '@supabase/auth-ui-react';
+import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from './supabaseClient';
 import Editor from './Editor';
