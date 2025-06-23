@@ -13,38 +13,28 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useCallback, useEffect, useState } from 'react';
-import { supabase } from './supabaseClient';
 import produce from 'immer';
+import NodeEditor from './NodeEditor';
+import { useNodeApi } from './hooks';
 
 export default function Editor() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([] as Edge[]);
   const [history, setHistory] = useState<{ nodes: Node[]; edges: Edge[] }[]>([]);
   const [future, setFuture] = useState<{ nodes: Node[]; edges: Edge[] }[]>([]);
+  const [selected, setSelected] = useState<Node | null>(null);
+
+  const { loadNodes, saveNodes, snapshotRevision } = useNodeApi();
 
   useEffect(() => {
-    load();
-  }, []);
-
-  const load = async () => {
-    const { data } = await supabase.from('nodes').select('id, text');
-    if (data) {
-      const loadedNodes: Node[] = data.map((n: any, idx: number) => ({
-        id: n.id,
-        position: { x: idx * 100, y: idx * 80 },
-        data: { label: n.text },
-      }));
-      setNodes(loadedNodes);
-    }
-  };
+    loadNodes().then(setNodes);
+  }, [loadNodes]);
 
   const save = useCallback(
     (nodes: Node[]) => {
-      supabase
-        .from('nodes')
-        .upsert(nodes.map((n) => ({ id: n.id, text: (n.data as any).label })));
+      saveNodes(nodes);
     },
-    []
+    [saveNodes]
   );
 
   useEffect(() => {
@@ -58,7 +48,11 @@ export default function Editor() {
     const id = crypto.randomUUID();
     setNodes((nds) => [
       ...nds,
-      { id, position: { x: 0, y: nds.length * 80 }, data: { label: 'New Node' } },
+      {
+        id,
+        position: { x: 0, y: nds.length * 80 },
+        data: { label: 'New Node', image: '' },
+      },
     ]);
   };
 
@@ -101,25 +95,42 @@ export default function Editor() {
     setEdges(next.edges);
   };
 
+  const saveSnapshot = () => snapshotRevision('demo-story', nodes);
+
   return (
-    <div className="h-screen">
-      <div className="p-2 space-x-2">
-        <button onClick={addNode} className="bg-blue-500 text-white px-2 py-1 rounded">Add Node</button>
-        <button onClick={undo} className="bg-gray-300 px-2 py-1 rounded">Undo</button>
-        <button onClick={redo} className="bg-gray-300 px-2 py-1 rounded">Redo</button>
+    <div className="h-screen flex">
+      <div className="flex-1">
+        <div className="p-2 space-x-2">
+          <button onClick={addNode} className="bg-blue-500 text-white px-2 py-1 rounded">Add Node</button>
+          <button onClick={undo} className="bg-gray-300 px-2 py-1 rounded">Undo</button>
+          <button onClick={redo} className="bg-gray-300 px-2 py-1 rounded">Redo</button>
+          <button onClick={saveSnapshot} className="bg-green-500 text-white px-2 py-1 rounded">Save Snapshot</button>
+        </div>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={handleNodesChange}
+          onEdgesChange={handleEdgesChange}
+          onConnect={onConnect}
+          onNodeClick={(_, node) => setSelected(node)}
+          fitView
+        >
+          <MiniMap />
+          <Controls />
+          <Background />
+        </ReactFlow>
       </div>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={handleNodesChange}
-        onEdgesChange={handleEdgesChange}
-        onConnect={onConnect}
-        fitView
-      >
-        <MiniMap />
-        <Controls />
-        <Background />
-      </ReactFlow>
+      <NodeEditor
+        node={selected}
+        onChange={(data) => {
+          if (!selected) return;
+          setNodes((nds) =>
+            nds.map((n) =>
+              n.id === selected.id ? { ...n, data: { ...n.data, ...data } } : n
+            )
+          );
+        }}
+      />
     </div>
   );
 }

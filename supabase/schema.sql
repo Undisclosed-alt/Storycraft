@@ -13,7 +13,8 @@ create table if not exists stories (
 create table if not exists nodes (
   id uuid primary key,
   story_id uuid references stories(id),
-  text text
+  text text,
+  image_url text
 );
 
 create table if not exists actions (
