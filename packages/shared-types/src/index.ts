@@ -10,6 +10,7 @@ export const NodeSchema = z.object({
   id: z.string(),
   storyId: z.string(),
   text: z.string(),
+  imageUrl: z.string().optional().nullable(),
 });
 export type Node = z.infer<typeof NodeSchema>;
 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Storycraft Preview</title>
+    <style>
+      body { font-family: sans-serif; padding: 1em; }
+      pre { white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <div id="root">Loading...</div>
+    <script type="module">
+      const params = new URLSearchParams(location.search);
+      const url = params.get('url');
+      async function load() {
+        if (!url) {
+          document.getElementById('root').textContent = 'No story URL provided';
+          return;
+        }
+        try {
+          const res = await fetch(url);
+          const story = await res.json();
+          document.getElementById('root').innerHTML = '<pre>'+JSON.stringify(story, null, 2)+'</pre>';
+        } catch (err) {
+          document.getElementById('root').textContent = 'Failed to load story';
+        }
+      }
+      load();
+    </script>
+  </body>
+</html>
