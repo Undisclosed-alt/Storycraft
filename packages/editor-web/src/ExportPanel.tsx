@@ -21,12 +21,22 @@ export default function ExportPanel({
       }
     }
     setError(null);
+    const actions: Record<string, { id: string; label: string; target: string }[]> = {};
+    for (const e of edges) {
+      if (!actions[e.source]) actions[e.source] = [];
+      actions[e.source].push({
+        id: e.id,
+        label: (e.label as string) ?? '',
+        target: e.target,
+      });
+    }
     const story = {
       id: 'demo-story',
       nodes: nodes.map((n) => ({
         id: n.id,
         text: (n.data as any).label,
         image: (n.data as any).image ?? '',
+        actions: actions[n.id] ?? [],
       })),
       edges: edges.map((e) => ({
         id: e.id,
