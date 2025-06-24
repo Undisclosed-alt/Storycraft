@@ -2,13 +2,15 @@ import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
-import { useStory } from './StoryContext';
+import { StoryNode } from './StoryContext';
 
-export default function NodeView() {
-  const { story, currentId, setCurrentId } = useStory();
-  if (!story || !currentId) return null;
-  const node = story.nodes.find((n) => n.id === currentId);
-  if (!node) return null;
+interface Props {
+  node: StoryNode;
+  onAction: (target: string) => void;
+  onRestart: () => void;
+}
+
+export default function NodeView({ node, onAction, onRestart }: Props) {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 16 }}>
@@ -22,11 +24,11 @@ export default function NodeView() {
       <Text style={{ marginBottom: 16 }}>{node.text}</Text>
       <View style={{ gap: 8 }}>
         {node.actions.map((a) => (
-          <Button key={a.id} mode="contained" onPress={() => setCurrentId(a.target)}>
+          <Button key={a.id} mode="contained" onPress={() => onAction(a.target)}>
             {a.label}
           </Button>
         ))}
-        <Button mode="outlined" onPress={() => setCurrentId(story.nodes[0].id)}>
+        <Button mode="outlined" onPress={onRestart}>
           Restart Story
         </Button>
       </View>

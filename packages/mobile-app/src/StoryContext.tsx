@@ -20,6 +20,7 @@ interface StoryContextType {
   setStory: (s: StoryData) => void;
   currentId: string | null;
   setCurrentId: (id: string) => void;
+  history: string[];
   theme: 'light' | 'dark';
   toggleTheme: () => void;
 }
@@ -35,6 +36,7 @@ export const useStory = () => {
 export function StoryProvider({ children }: { children: React.ReactNode }) {
   const [story, setStory] = useState<StoryData | null>(null);
   const [currentId, setCurrentId] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
@@ -54,22 +56,29 @@ export function StoryProvider({ children }: { children: React.ReactNode }) {
     (async () => {
       const saved = await AsyncStorage.getItem('progress');
       if (saved) setCurrentId(saved);
+      const hist = await AsyncStorage.getItem('history');
+      if (hist) setHistory(JSON.parse(hist));
     })();
   }, []);
 
   const setCurrent = async (id: string) => {
     setCurrentId(id);
+    setHistory((h) => {
+      const next = [...h, id];
+      AsyncStorage.setItem('history', JSON.stringify(next));
+      return next;
+    });
     await AsyncStorage.setItem('progress', id);
   };
 
   return (
-    <StoryContext.Provider value={{ story, setStory, currentId, setCurrentId: setCurrent, theme, toggleTheme }}>
+    <StoryContext.Provider value={{ story, setStory, currentId, setCurrentId: setCurrent, history, theme, toggleTheme }}>
       <PaperProvider theme={theme === 'light' ? MD3LightTheme : MD3DarkTheme}>{children}</PaperProvider>
     </StoryContext.Provider>
   );
 }
 
-export async function loadStory(url: string): Promise<StoryData> {
+export async function loadStory(url: string, fallback?: StoryData): Promise<StoryData> {
   const cachePath = FileSystem.cacheDirectory + encodeURIComponent(url);
   try {
     const info = await FileSystem.getInfoAsync(cachePath);
@@ -78,8 +87,13 @@ export async function loadStory(url: string): Promise<StoryData> {
       return JSON.parse(data);
     }
   } catch {}
-  const res = await fetch(url);
-  const json = await res.json();
-  await FileSystem.writeAsStringAsync(cachePath, JSON.stringify(json));
-  return json;
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+    await FileSystem.writeAsStringAsync(cachePath, JSON.stringify(json));
+    return json;
+  } catch {
+    if (fallback) return fallback;
+    throw new Error('Failed to load story');
+  }
 }

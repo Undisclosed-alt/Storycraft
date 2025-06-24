@@ -1,16 +1,37 @@
 import React, { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
+import NetInfo from '@react-native-community/netinfo';
 import { useStory, loadStory } from './StoryContext';
+import bundled from '../assets/story.json';
 
-export default function StoryLoader({ url }: { url: string }) {
+interface Props {
+  url: string;
+  onLoaded: (firstId: string) => void;
+}
+
+export default function StoryLoader({ url, onLoaded }: Props) {
   const { setStory, setCurrentId } = useStory();
 
   useEffect(() => {
     (async () => {
-      const data = await loadStory(url);
-      setStory(data);
-      setCurrentId(data.nodes[0]?.id ?? null);
+      try {
+        const data = await loadStory(url, bundled as any);
+        setStory(data);
+        const first = data.nodes[0]?.id ?? null;
+        if (first) {
+          setCurrentId(first);
+          onLoaded(first);
+        }
+      } catch {}
     })();
+
+    const unsub = NetInfo.addEventListener((state) => {
+      if (state.isConnected) {
+        loadStory(url, bundled as any).then((data) => setStory(data));
+      }
+    });
+
+    return () => unsub();
   }, [url]);
 
   return (

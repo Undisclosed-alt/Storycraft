@@ -1,0 +1,21 @@
+{
+  "id": "demo",
+  "nodes": [
+    {
+      "id": "start",
+      "text": "You wake up in a dark room.",
+      "image": "",
+      "actions": [
+        { "id": "a1", "label": "Go outside", "target": "outside" }
+      ]
+    },
+    {
+      "id": "outside",
+      "text": "You see a sunny day.",
+      "image": "",
+      "actions": [
+        { "id": "a2", "label": "Back inside", "target": "start" }
+      ]
+    }
+  ]
+}
