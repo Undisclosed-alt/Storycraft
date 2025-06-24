@@ -18,7 +18,12 @@ function Navigator() {
         <Stack.Screen name="loader" options={{ headerShown: false }}>
           {({ navigation }) => (
             <StoryLoader
-              url="https://pcfjkrdpdzwcvwupueen.supabase.co/storage/v1/object/public/exports/demo-story/story.json"
+              url={
+                `${
+                  process.env.EXPO_PUBLIC_SUPABASE_STORAGE_URL ??
+                  'https://pcfjkrdpdzwcvwupueen.supabase.co/storage/v1/object/public/exports'
+                }/demo-story/story.json`
+              }
               onLoaded={(firstId) => navigation.replace('node', { id: firstId })}
             />
           )}
