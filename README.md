@@ -45,3 +45,17 @@ The repository is configured to use the demo Supabase project:
 - **Storage URL:** `https://pcfjkrdpdzwcvwupueen.supabase.co/storage/v1/object/public/images`
 
 These values also appear in `.env.example` so local development matches the demo instance.
+
+## Testing
+
+Run unit tests across all packages:
+
+```bash
+pnpm test
+```
+
+End-to-end tests use Playwright:
+
+```bash
+pnpm e2e
+```
