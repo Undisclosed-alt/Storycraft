@@ -4,6 +4,7 @@ import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from './supabaseClient';
 import Editor from './Editor';
+import { ReactFlowProvider } from 'reactflow';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -26,5 +27,9 @@ export default function App() {
     );
   }
 
-  return <Editor />;
+  return (
+    <ReactFlowProvider>
+      <Editor />
+    </ReactFlowProvider>
+  );
 }

@@ -16,7 +16,6 @@ import 'reactflow/dist/style.css';
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 import Sidebar from './Sidebar';
-import { ReactFlowProvider } from 'reactflow';
 import ImageUpload from './ImageUpload';
 import ExportPanel from './ExportPanel';
 
@@ -178,7 +177,6 @@ export default function Editor() {
   };
 
   return (
-    <ReactFlowProvider>
       <div className="h-screen flex">
         <Sidebar />
         <div className="flex-1" onDrop={onDrop} onDragOver={onDragOver}>
@@ -242,6 +240,5 @@ export default function Editor() {
           <ExportPanel nodes={nodes} edges={edges} />
         </div>
       </div>
-    </ReactFlowProvider>
   );
 }
