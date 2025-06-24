@@ -6,7 +6,7 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "test": "echo \"No tests\"",
+    "test": "jest -c ../../jest.config.cjs",
     "build": "echo 'mobile build placeholder'"
   },
   "keywords": [],
