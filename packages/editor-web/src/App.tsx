@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ReactFlowProvider, createReactFlowStore } from 'reactflow';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { Session } from '@supabase/supabase-js';
@@ -7,6 +8,9 @@ import Editor from './Editor';
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
+
+  // isolated store → multiple independent flows possible
+  const store = React.useMemo(() => createReactFlowStore(), []);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => setSession(data.session));
@@ -26,5 +30,9 @@ export default function App() {
     );
   }
 
-  return <Editor />;
+  return (
+    <ReactFlowProvider store={store}>
+      <Editor />
+    </ReactFlowProvider>
+  );
 }
