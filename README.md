@@ -45,3 +45,32 @@ The repository is configured to use the demo Supabase project:
 - **Storage URL:** `https://pcfjkrdpdzwcvwupueen.supabase.co/storage/v1/object/public/images`
 
 These values also appear in `.env.example` so local development matches the demo instance.
+
+## Running the Editor Locally
+
+1. Copy `.env.example` to `.env` and keep the Supabase variables or replace them with your own project credentials.
+2. Install dependencies with `pnpm install`.
+3. Start the development server:
+
+```bash
+pnpm --filter editor-web dev
+```
+
+The editor will be available at http://localhost:5173.
+
+## Contributing to Migrations
+
+Create new SQL migration files using the Supabase CLI:
+
+```bash
+supabase migration new <name>
+# edit the file under supabase/migrations
+SUPABASE_PROJECT_ID=<your id> ./supabase/provision.sh
+```
+
+This links your project and applies the migrations.
+
+## Publishing Stories
+
+In the editor choose **Export Story**. The JSON file is uploaded to the `exports` bucket and a public URL is displayed. Use this URL in the mobile app or share it to let others read your story.
+
