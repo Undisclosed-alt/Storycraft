@@ -60,6 +60,23 @@ pnpm --filter editor-web dev
 
 The editor will be available at http://localhost:5173.
 
+## Running the Editor on Vercel
+
+Use `packages/editor-web` as the Vercel project root. Configure the environment
+variables from `.env.example` (`VERCEL_TOKEN`, `VERCEL_ORG_ID`,
+`VERCEL_PROJECT_ID`, `VITE_SUPABASE_*`) in the Vercel dashboard before
+deploying.
+
+Example commands with the Vercel CLI:
+
+```bash
+cd packages/editor-web
+npx vercel dev          # local preview
+npx vercel --prod       # deploy to production
+```
+
+Connecting the GitHub repository to Vercel can automate deployments.
+
 ## Contributing to Migrations
 
 Create new SQL migration files using the Supabase CLI:
