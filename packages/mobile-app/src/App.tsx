@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StoryProvider, useStory } from './StoryContext';
 import StoryLoader from './StoryLoader';
-import NodeView from './NodeView';
+import NodeScreen from './NodeScreen';
 import { Button } from 'react-native-paper';
 import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
@@ -11,28 +11,29 @@ import { StatusBar } from 'expo-status-bar';
 const Stack = createStackNavigator();
 
 function Navigator() {
-  const { story, currentId, toggleTheme } = useStory();
+  const { toggleTheme } = useStory();
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {!story ? (
-          <Stack.Screen name="loader" options={{ headerShown: false }}>
-            {() => <StoryLoader url="https://pcfjkrdpdzwcvwupueen.supabase.co/storage/v1/object/public/exports/demo-story/story.json" />}
-          </Stack.Screen>
-        ) : (
-          <Stack.Screen
-            name="node"
-            options={{
-              headerRight: () => (
-                <View style={{ flexDirection: 'row' }}>
-                  <Button onPress={toggleTheme}>Theme</Button>
-                </View>
-              ),
-            }}
-          >
-            {() => <NodeView />}
-          </Stack.Screen>
-        )}
+        <Stack.Screen name="loader" options={{ headerShown: false }}>
+          {({ navigation }) => (
+            <StoryLoader
+              url="https://pcfjkrdpdzwcvwupueen.supabase.co/storage/v1/object/public/exports/demo-story/story.json"
+              onLoaded={(firstId) => navigation.replace('node', { id: firstId })}
+            />
+          )}
+        </Stack.Screen>
+        <Stack.Screen
+          name="node"
+          options={{
+            headerRight: () => (
+              <View style={{ flexDirection: 'row' }}>
+                <Button onPress={toggleTheme}>Theme</Button>
+              </View>
+            ),
+          }}
+          component={NodeScreen}
+        />
       </Stack.Navigator>
       <StatusBar />
     </NavigationContainer>

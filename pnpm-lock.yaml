@@ -109,6 +109,9 @@ importers:
       '@react-native-async-storage/async-storage':
         specifier: ^1.23.0
         version: 1.24.0(react-native@0.73.4(@babel/core@7.27.4)(@babel/preset-env@7.27.2(@babel/core@7.27.4))(react@19.1.0))
+      '@react-native-community/netinfo':
+        specifier: ^11.4.1
+        version: 11.4.1(react-native@0.73.4(@babel/core@7.27.4)(@babel/preset-env@7.27.2(@babel/core@7.27.4))(react@19.1.0))
       '@react-navigation/native':
         specifier: ^7.0.18
         version: 7.1.14(react-native@0.73.4(@babel/core@7.27.4)(@babel/preset-env@7.27.2(@babel/core@7.27.4))(react@19.1.0))(react@19.1.0)
@@ -1029,7 +1032,7 @@ packages:
 
   '@expo/bunyan@4.0.1':
     resolution: {integrity: sha512-+Lla7nYSiHZirgK+U/uYzsLv/X+HaJienbD5AKX1UQZHYfWaP+9uuQluRB4GrEVWF0GZ7vEVp/jzaOT9k/SQlg==}
-    engines: {'0': node >=0.10.0}
+    engines: {node: '>=0.10.0'}
 
   '@expo/cli@0.17.13':
     resolution: {integrity: sha512-n13yxOmI3I0JidzMdFCH68tYKGDtK4XlDFk1vysZX7AIRKeDVRsSbHhma5jCla2bDt25RKmJBHA9KtzielwzAA==}
@@ -1252,6 +1255,11 @@ packages:
     resolution: {integrity: sha512-WgoUWwLDcf/G1Su2COUUVs3RzAwnV/vUTdISSpAUGgSc57mPabaAoUctKTnfYEhCnE3j02k3VtaVPwCAFRO3TQ==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@react-native-community/netinfo@11.4.1':
+    resolution: {integrity: sha512-B0BYAkghz3Q2V09BF88RA601XursIEA111tnc2JOaN7axJWmNefmfjZqw/KdSxKZp7CZUuPpjBmz/WCR9uaHYg==}
+    peerDependencies:
+      react-native: '>=0.59'
 
   '@react-native/assets-registry@0.73.1':
     resolution: {integrity: sha512-2FgAbU7uKM5SbbW9QptPPZx8N9Ke2L7bsHb+EhAanZjFZunA9PaYtyjUQ1s7HD+zDVqOQIvjkpXSv7Kejd2tqg==}
@@ -6524,6 +6532,10 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
+
+  '@react-native-community/netinfo@11.4.1(react-native@0.73.4(@babel/core@7.27.4)(@babel/preset-env@7.27.2(@babel/core@7.27.4))(react@19.1.0))':
+    dependencies:
+      react-native: 0.73.4(@babel/core@7.27.4)(@babel/preset-env@7.27.2(@babel/core@7.27.4))(react@19.1.0)
 
   '@react-native/assets-registry@0.73.1': {}
 
