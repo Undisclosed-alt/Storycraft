@@ -14,7 +14,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useCallback, useEffect, useState } from 'react';
-import { supabase } from './supabaseClient';
+import { api } from './supabaseClient';
 import Sidebar from './Sidebar';
 import ImageUpload from './ImageUpload';
 import ExportPanel from './ExportPanel';
@@ -32,7 +32,7 @@ export default function Editor() {
   }, []);
 
   const load = async () => {
-    const { data: nodeData } = await supabase
+    const { data: nodeData } = await api.client
       .from('nodes')
       .select('id, text, image_url');
     if (nodeData) {
@@ -44,7 +44,7 @@ export default function Editor() {
       setNodes(loadedNodes);
     }
 
-    const { data: actionData } = await supabase
+    const { data: actionData } = await api.client
       .from('actions')
       .select('id, node_id, target_id, label');
     if (actionData) {
@@ -60,7 +60,7 @@ export default function Editor() {
 
   const save = useCallback(
     (nodes: Node[], edges: Edge[]) => {
-      supabase
+      api.client
         .from('nodes')
         .upsert(
           nodes.map((n) => ({
@@ -70,7 +70,7 @@ export default function Editor() {
           }))
         );
 
-      supabase
+      api.client
         .from('actions')
         .upsert(
           edges.map((e) => ({
@@ -81,7 +81,7 @@ export default function Editor() {
           }))
         );
 
-      supabase.from('revisions').insert({
+      api.client.from('revisions').insert({
         id: crypto.randomUUID(),
         story_id: 'demo-story',
         data: { nodes, edges },
