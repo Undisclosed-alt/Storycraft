@@ -30,6 +30,12 @@ jobs:
       - run: pnpm --filter shared-types build
       - run: pnpm --filter editor-web build
       - run: pnpm --filter mobile-app build
+      - name: Install Supabase CLI
+        run: npm install -g supabase@latest
+      - name: Provision Supabase
+        run: ./supabase/provision.sh
+        env:
+          SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
       - name: Set up Expo
         uses: expo/expo-github-action@v8
         with:
