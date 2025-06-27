@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Node, Edge } from 'reactflow';
 import ImageUpload from './ImageUpload';
+import { formatId } from './utils';
 
 interface Props {
   node: Node;
@@ -143,7 +144,7 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
               >
                 {nodes.map((n) => (
                   <option key={n.id} value={n.id}>
-                    {(n.data as any).title || n.id}
+                    {(n.data as any).title || formatId(n.id)}
                   </option>
                 ))}
               </select>
