@@ -14,7 +14,7 @@ export default function ImageUpload({
   const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       setError('File too large');
       return;
     }
