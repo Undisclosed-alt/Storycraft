@@ -19,7 +19,6 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
   useEffect(() => {
     setIdInput(node.id);
   }, [node.id]);
-
   const updateNode = (data: any) =>
     setNodes((nds) => nds.map((n) => (n.id === node.id ? { ...n, data: { ...n.data, ...data } } : n)));
 
@@ -63,7 +62,6 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
     setSelected((cur) => (cur && cur.id === node.id ? { ...cur, id: String(num) } : cur));
     setError(null);
   };
-
   useEffect(() => {
     if (!node.data.title) {
       setError('Title is required');
