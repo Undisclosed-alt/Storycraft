@@ -27,6 +27,7 @@ export default function Editor() {
   const [history, setHistory] = useState<{ nodes: Node[]; edges: Edge[] }[]>([]);
   const [future, setFuture] = useState<{ nodes: Node[]; edges: Edge[] }[]>([]);
   const [selected, setSelected] = useState<Node | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const reactFlow = useReactFlow();
   const nodeTypes: NodeTypes = { story: StoryNode };
 
@@ -35,9 +36,14 @@ export default function Editor() {
   }, []);
 
   const load = async () => {
-    const { data: nodeData } = await api.client
+    setError(null);
+    const { data: nodeData, error: nodeError } = await api.client
       .from('nodes')
       .select('id, title, text, image_url');
+    if (nodeError) {
+      console.error(nodeError);
+      setError(nodeError.message);
+    }
     if (nodeData) {
       const loadedNodes: Node[] = nodeData.map((n: any, idx: number) => ({
         id: String(n.id),
@@ -48,9 +54,13 @@ export default function Editor() {
       setNodes(loadedNodes);
     }
 
-    const { data: actionData } = await api.client
+    const { data: actionData, error: actionError } = await api.client
       .from('actions')
       .select('id, node_id, target_id, label');
+    if (actionError) {
+      console.error(actionError);
+      setError(actionError.message);
+    }
     if (actionData) {
       const loadedEdges: Edge[] = actionData.map((a: any) => ({
         id: a.id,
@@ -241,7 +251,7 @@ export default function Editor() {
 
   return (
       <div className="h-screen flex">
-        <Sidebar />
+        <Sidebar error={error} />
         <div className="flex-1" onDrop={onDrop} onDragOver={onDragOver}>
           <div className="p-2 space-x-2">
             <button onClick={addNode} className="bg-blue-500 text-white px-2 py-1 rounded">Add Node</button>
