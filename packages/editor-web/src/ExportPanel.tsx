@@ -20,6 +20,11 @@ export default function ExportPanel({
         return;
       }
     }
+    const issues = await api.validate_graph(api.client);
+    if (issues.length > 0) {
+      setError(issues.map((i) => `Node ${i.nodeId}: ${i.message}`).join('\n'));
+      return;
+    }
     setError(null);
     const actions: Record<string, { id: string; label: string; target: string }[]> = {};
     for (const e of edges) {

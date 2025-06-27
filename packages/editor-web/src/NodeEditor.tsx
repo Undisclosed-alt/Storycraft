@@ -8,11 +8,17 @@ interface Props {
   setNodes: React.Dispatch<React.SetStateAction<Node[]>>;
   edges: Edge[];
   setEdges: React.Dispatch<React.SetStateAction<Edge[]>>;
+  setSelected: React.Dispatch<React.SetStateAction<Node | null>>;
 }
 
-export default function NodeEditor({ node, nodes, setNodes, edges, setEdges }: Props) {
+export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, setSelected }: Props) {
   const [error, setError] = useState<string | null>(null);
+  const [idInput, setIdInput] = useState(node.id);
   const outgoing = edges.filter((e) => e.source === node.id);
+
+  useEffect(() => {
+    setIdInput(node.id);
+  }, [node.id]);
 
   const updateNode = (data: any) =>
     setNodes((nds) => nds.map((n) => (n.id === node.id ? { ...n, data: { ...n.data, ...data } } : n)));
@@ -34,9 +40,37 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges }: P
   const updateEdge = (id: string, data: Partial<Edge>) =>
     setEdges((eds) => eds.map((e) => (e.id === id ? { ...e, ...data } : e)));
 
+  const saveId = () => {
+    const num = parseInt(idInput, 10);
+    if (isNaN(num)) {
+      setError('ID must be a number');
+      return;
+    }
+    if (nodes.some((n) => n.id !== node.id && n.id === String(num))) {
+      setError('ID already exists');
+      return;
+    }
+    setNodes((nds) =>
+      nds.map((n) => (n.id === node.id ? { ...n, id: String(num) } : n))
+    );
+    setEdges((eds) =>
+      eds.map((e) => ({
+        ...e,
+        source: e.source === node.id ? String(num) : e.source,
+        target: e.target === node.id ? String(num) : e.target,
+      }))
+    );
+    setSelected((cur) => (cur && cur.id === node.id ? { ...cur, id: String(num) } : cur));
+    setError(null);
+  };
+
   useEffect(() => {
     if (!node.data.title) {
       setError('Title is required');
+      return;
+    }
+    if (nodes.some((n) => n.id !== node.id && n.id === idInput)) {
+      setError('ID already exists');
       return;
     }
     for (const e of outgoing) {
@@ -46,10 +80,24 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges }: P
       }
     }
     setError(null);
-  }, [node, outgoing, nodes]);
+  }, [node, outgoing, nodes, idInput]);
 
   return (
     <div className="p-2 space-y-2 flex-1 overflow-auto">
+      <div className="flex items-center space-x-2">
+        <input
+          type="number"
+          className="border p-1 w-20"
+          value={idInput}
+          onChange={(e) => setIdInput(e.target.value)}
+        />
+        <button
+          onClick={saveId}
+          className="px-2 py-1 bg-gray-200 rounded"
+        >
+          Update ID
+        </button>
+      </div>
       <input
         className="w-full border p-1"
         placeholder="Title"
