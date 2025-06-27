@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Edge, Node } from 'reactflow';
-import { supabase } from './supabaseClient';
+import { api } from './supabaseClient';
 
 export default function ExportPanel({
   nodes,
@@ -19,6 +19,11 @@ export default function ExportPanel({
         setError(`Missing target for edge ${e.id}`);
         return;
       }
+    }
+    const issues = await api.validate_graph(api.client);
+    if (issues.length > 0) {
+      setError(issues.map((i) => `Node ${i.nodeId}: ${i.message}`).join('\n'));
+      return;
     }
     setError(null);
     const actions: Record<string, { id: string; label: string; target: string }[]> = {};
@@ -49,8 +54,8 @@ export default function ExportPanel({
       type: 'application/json',
     });
     const path = `exports/${story.id}/story.json`;
-    await supabase.storage.from('exports').upload(path, blob, { upsert: true });
-    const { data } = supabase.storage.from('exports').getPublicUrl(path);
+    await api.client.storage.from('exports').upload(path, blob, { upsert: true });
+    const { data } = api.client.storage.from('exports').getPublicUrl(path);
     setLink(data.publicUrl);
   };
 
