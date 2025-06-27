@@ -1,6 +1,8 @@
+// Node editor UI for editing stories
 import { useEffect, useState } from 'react';
 import { Node, Edge } from 'reactflow';
 import ImageUpload from './ImageUpload';
+import { formatId } from './utils';
 
 interface Props {
   node: Node;
@@ -83,6 +85,7 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
   return (
     <div className="p-2 space-y-2 flex-1 overflow-auto">
       <div className="flex items-center space-x-2">
+        <span className="text-sm font-mono">{formatId(node.id)}</span>
         <input
           type="number"
           className="border p-1 w-20"
@@ -143,7 +146,7 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
               >
                 {nodes.map((n) => (
                   <option key={n.id} value={n.id}>
-                    {(n.data as any).title || n.id}
+                    {(n.data as any).title || formatId(n.id)}
                   </option>
                 ))}
               </select>
