@@ -1,3 +1,4 @@
+// Custom node renderer for Storycraft showing zero-padded ID
 import { NodeProps, Handle, Position } from 'reactflow';
 import { formatId } from './utils';
 

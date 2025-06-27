@@ -1,3 +1,4 @@
+// Node editor UI for editing stories
 import { useEffect, useState } from 'react';
 import { Node, Edge } from 'reactflow';
 import ImageUpload from './ImageUpload';
