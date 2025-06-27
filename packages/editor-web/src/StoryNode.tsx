@@ -1,4 +1,5 @@
 import { NodeProps, Handle, Position } from 'reactflow';
+import { formatId } from './utils';
 
 export default function StoryNode({ id, data }: NodeProps) {
   const { title, image } = data as any;
@@ -11,7 +12,7 @@ export default function StoryNode({ id, data }: NodeProps) {
         />
       )}
       <div className="p-1 text-center font-medium">
-        {id} &middot; {title || '(untitled)'}
+        {formatId(id)} &middot; {title || '(untitled)'}
       </div>
       <Handle type="source" position={Position.Right} />
       <Handle type="target" position={Position.Left} />
