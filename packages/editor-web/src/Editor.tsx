@@ -210,6 +210,7 @@ export default function Editor() {
               setNodes={setNodes}
               edges={edges}
               setEdges={setEdges}
+              setSelected={setSelected}
             />
           )}
           <ExportPanel nodes={nodes} edges={edges} />
