@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from './supabaseClient';
+import { api } from './supabaseClient';
 
 export default function ImageUpload({
   nodeId,
@@ -25,7 +25,7 @@ export default function ImageUpload({
     setError(null);
     const path = `${nodeId}/${Date.now()}-${file.name}`;
     setProgress(50);
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await api.client.storage
       .from('images')
       .upload(path, file, { upsert: true });
     if (uploadError) {
@@ -34,7 +34,7 @@ export default function ImageUpload({
       return;
     }
     setProgress(100);
-    const { data } = supabase.storage.from('images').getPublicUrl(path);
+    const { data } = api.client.storage.from('images').getPublicUrl(path);
     onUrl(data.publicUrl);
   };
 

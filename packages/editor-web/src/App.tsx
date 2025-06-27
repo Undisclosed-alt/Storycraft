@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 import { Session } from '@supabase/supabase-js';
-import { supabase } from './supabaseClient';
+import { api } from './supabaseClient';
 import Editor from './Editor';
 import { ReactFlowProvider } from 'reactflow';
 
@@ -10,8 +10,8 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => setSession(data.session));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    api.client.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: listener } = api.client.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
     return () => {
@@ -22,7 +22,7 @@ export default function App() {
   if (!session) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
+        <Auth supabaseClient={api.client} appearance={{ theme: ThemeSupa }} />
       </div>
     );
   }
