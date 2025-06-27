@@ -14,10 +14,10 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { useCallback, useEffect, useState } from 'react';
-import { supabase } from './supabaseClient';
+import { api } from './supabaseClient';
 import Sidebar from './Sidebar';
-import ImageUpload from './ImageUpload';
 import ExportPanel from './ExportPanel';
+import NodeEditor from './NodeEditor';
 
 export default function Editor() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
@@ -32,19 +32,19 @@ export default function Editor() {
   }, []);
 
   const load = async () => {
-    const { data: nodeData } = await supabase
+    const { data: nodeData } = await api.client
       .from('nodes')
-      .select('id, text, image_url');
+      .select('id, title, text, image_url');
     if (nodeData) {
       const loadedNodes: Node[] = nodeData.map((n: any, idx: number) => ({
-        id: n.id,
+        id: String(n.id),
         position: { x: idx * 100, y: idx * 80 },
-        data: { label: n.text, image: n.image_url ?? '' },
+        data: { title: n.title ?? '', text: n.text ?? '', image: n.image_url ?? '' },
       }));
       setNodes(loadedNodes);
     }
 
-    const { data: actionData } = await supabase
+    const { data: actionData } = await api.client
       .from('actions')
       .select('id, node_id, target_id, label');
     if (actionData) {
@@ -60,17 +60,18 @@ export default function Editor() {
 
   const save = useCallback(
     (nodes: Node[], edges: Edge[]) => {
-      supabase
+      api.client
         .from('nodes')
         .upsert(
           nodes.map((n) => ({
-            id: n.id,
-            text: (n.data as any).label,
+            id: parseInt(n.id, 10),
+            title: (n.data as any).title,
+            text: (n.data as any).text,
             image_url: (n.data as any).image ?? null,
           }))
         );
 
-      supabase
+      api.client
         .from('actions')
         .upsert(
           edges.map((e) => ({
@@ -81,7 +82,7 @@ export default function Editor() {
           }))
         );
 
-      supabase.from('revisions').insert({
+      api.client.from('revisions').insert({
         id: crypto.randomUUID(),
         story_id: 'demo-story',
         data: { nodes, edges },
@@ -98,13 +99,14 @@ export default function Editor() {
 
   const addNode = () => {
     setHistory((h) => [...h, { nodes, edges }]);
-    const id = crypto.randomUUID();
+    const nextId =
+      nodes.reduce((max, n) => Math.max(max, parseInt(n.id, 10)), 0) + 1;
     setNodes((nds) => [
       ...nds,
       {
-        id,
+        id: String(nextId),
         position: { x: 0, y: nds.length * 80 },
-        data: { label: 'New Node', image: '' },
+        data: { title: '', text: '', image: '' },
       },
     ]);
   };
@@ -119,10 +121,11 @@ export default function Editor() {
     const type = event.dataTransfer.getData('application/reactflow');
     if (type) {
       const position = reactFlow.project({ x: event.clientX, y: event.clientY });
-      const id = crypto.randomUUID();
+      const nextId =
+        nodes.reduce((max, n) => Math.max(max, parseInt(n.id, 10)), 0) + 1;
       setNodes((nds) => [
         ...nds,
-        { id, position, data: { label: 'New Node', image: '' } },
+        { id: String(nextId), position, data: { title: '', text: '', image: '' } },
       ]);
     }
   };
@@ -201,41 +204,13 @@ export default function Editor() {
         </div>
         <div className="w-64 border-l flex flex-col">
           {selected && (
-            <div className="p-2 space-y-2 flex-1 overflow-auto">
-              <textarea
-                className="w-full border p-1"
-                rows={6}
-                value={(selected.data as any).label}
-                onChange={(e) =>
-                  setNodes((nds) =>
-                    nds.map((n) =>
-                      n.id === selected.id
-                        ? { ...n, data: { ...n.data, label: e.target.value } }
-                        : n
-                    )
-                  )
-                }
-              />
-              <ImageUpload
-                nodeId={selected.id}
-                onUrl={(url) =>
-                  setNodes((nds) =>
-                    nds.map((n) =>
-                      n.id === selected.id
-                        ? { ...n, data: { ...n.data, image: url } }
-                        : n
-                    )
-                  )
-                }
-              />
-              {(selected.data as any).image && (
-                <img
-                  src={(selected.data as any).image}
-                  alt=""
-                  className="w-full"
-                />
-              )}
-            </div>
+            <NodeEditor
+              node={selected}
+              nodes={nodes}
+              setNodes={setNodes}
+              edges={edges}
+              setEdges={setEdges}
+            />
           )}
           <ExportPanel nodes={nodes} edges={edges} />
         </div>

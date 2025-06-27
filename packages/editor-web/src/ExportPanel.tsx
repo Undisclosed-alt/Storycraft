@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Edge, Node } from 'reactflow';
-import { supabase } from './supabaseClient';
+import { api } from './supabaseClient';
 
 export default function ExportPanel({
   nodes,
@@ -49,8 +49,8 @@ export default function ExportPanel({
       type: 'application/json',
     });
     const path = `exports/${story.id}/story.json`;
-    await supabase.storage.from('exports').upload(path, blob, { upsert: true });
-    const { data } = supabase.storage.from('exports').getPublicUrl(path);
+    await api.client.storage.from('exports').upload(path, blob, { upsert: true });
+    const { data } = api.client.storage.from('exports').getPublicUrl(path);
     setLink(data.publicUrl);
   };
 
