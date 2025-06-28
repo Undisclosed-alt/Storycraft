@@ -122,7 +122,7 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
         <select
           className="border p-1"
           value={outgoing.length}
-          onChange={(e) => setButtonCount(parseInt(e.target.value, 10))}
+          onChange={(e) => setButtonCount(Number(e.target.value))}
         >
           {[1, 2, 3, 4].map((c) => (
             <option key={c} value={c}>

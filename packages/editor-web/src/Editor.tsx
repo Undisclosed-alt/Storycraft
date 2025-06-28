@@ -114,7 +114,7 @@ export default function Editor() {
   const addNode = () => {
     setHistory((h) => [...h.slice(-9), { nodes, edges }]);
     const nextId =
-      nodes.reduce((max, n) => Math.max(max, parseInt(n.id, 10)), 0) + 1;
+      nodes.reduce((max, n) => Math.max(max, Number(n.id)), 0) + 1;
     setNodes((nds) => [
       ...nds,
       {
@@ -137,7 +137,7 @@ export default function Editor() {
     if (type) {
       const position = reactFlow.project({ x: event.clientX, y: event.clientY });
       const nextId =
-        nodes.reduce((max, n) => Math.max(max, parseInt(n.id, 10)), 0) + 1;
+        nodes.reduce((max, n) => Math.max(max, Number(n.id)), 0) + 1;
       setNodes((nds) => [
         ...nds,
         {
