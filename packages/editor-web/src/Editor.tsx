@@ -78,7 +78,7 @@ export default function Editor() {
         .from('nodes')
         .upsert(
           nodes.map((n) => ({
-            id: parseInt(n.id, 10),
+            id: n.id,
             title: (n.data as any).title,
             text: (n.data as any).text,
             image_url: (n.data as any).image ?? null,
@@ -113,12 +113,11 @@ export default function Editor() {
 
   const addNode = () => {
     setHistory((h) => [...h.slice(-9), { nodes, edges }]);
-    const nextId =
-      nodes.reduce((max, n) => Math.max(max, Number(n.id)), 0) + 1;
+    const newId = crypto.randomUUID();
     setNodes((nds) => [
       ...nds,
       {
-        id: String(nextId),
+        id: newId,
         type: 'story',
         position: { x: 0, y: nds.length * 80 },
         data: { title: '', text: '', image: '' },
@@ -136,12 +135,11 @@ export default function Editor() {
     const type = event.dataTransfer.getData('application/reactflow');
     if (type) {
       const position = reactFlow.project({ x: event.clientX, y: event.clientY });
-      const nextId =
-        nodes.reduce((max, n) => Math.max(max, Number(n.id)), 0) + 1;
+      const newId = crypto.randomUUID();
       setNodes((nds) => [
         ...nds,
         {
-          id: String(nextId),
+          id: newId,
           type: 'story',
           position,
           data: { title: '', text: '', image: '' },
