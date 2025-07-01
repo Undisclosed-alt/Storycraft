@@ -42,26 +42,22 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
     setEdges((eds) => eds.map((e) => (e.id === id ? { ...e, ...data } : e)));
 
   const saveId = () => {
-    const num = parseInt(idInput, 10);
-    if (isNaN(num)) {
-      setError('ID must be a number');
-      return;
-    }
-    if (nodes.some((n) => n.id !== node.id && n.id === String(num))) {
+    const num = idInput;
+    if (nodes.some((n) => n.id !== node.id && n.id === num)) {
       setError('ID already exists');
       return;
     }
     setNodes((nds) =>
-      nds.map((n) => (n.id === node.id ? { ...n, id: String(num) } : n))
+      nds.map((n) => (n.id === node.id ? { ...n, id: num } : n))
     );
     setEdges((eds) =>
       eds.map((e) => ({
         ...e,
-        source: e.source === node.id ? String(num) : e.source,
-        target: e.target === node.id ? String(num) : e.target,
+        source: e.source === node.id ? num : e.source,
+        target: e.target === node.id ? num : e.target,
       }))
     );
-    setSelected((cur) => (cur && cur.id === node.id ? { ...cur, id: String(num) } : cur));
+    setSelected((cur) => (cur && cur.id === node.id ? { ...cur, id: num } : cur));
     setError(null);
   };
   useEffect(() => {
@@ -87,7 +83,7 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
       <div className="flex items-center space-x-2">
         <span className="text-sm font-mono">{formatId(node.id)}</span>
         <input
-          type="number"
+          type="text"
           className="border p-1 w-20"
           value={idInput}
           onChange={(e) => setIdInput(e.target.value)}
