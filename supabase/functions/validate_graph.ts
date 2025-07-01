@@ -1,5 +1,5 @@
 export interface ValidationError {
-  nodeId: number;
+  nodeId: string;
   message: string;
 }
 
