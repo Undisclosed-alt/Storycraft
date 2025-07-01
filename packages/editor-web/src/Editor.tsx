@@ -20,6 +20,7 @@ import Sidebar from './Sidebar';
 import ExportPanel from './ExportPanel';
 import NodeEditor from './NodeEditor';
 import StoryNode from './StoryNode';
+import { generateId } from './id';
 
 export default function Editor() {
   const [nodes, setNodes, onNodesChange] = useNodesState([] as Node[]);
@@ -97,7 +98,7 @@ export default function Editor() {
         );
 
       await api.client.from('revisions').insert({
-        id: crypto.randomUUID(),
+        id: generateId(),
         story_id: 'demo-story',
         data: { nodes, edges },
       });
@@ -113,7 +114,7 @@ export default function Editor() {
 
   const addNode = () => {
     setHistory((h) => [...h.slice(-9), { nodes, edges }]);
-    const newId = crypto.randomUUID();
+    const newId = generateId();
     setNodes((nds) => [
       ...nds,
       {
@@ -135,7 +136,7 @@ export default function Editor() {
     const type = event.dataTransfer.getData('application/reactflow');
     if (type) {
       const position = reactFlow.project({ x: event.clientX, y: event.clientY });
-      const newId = crypto.randomUUID();
+      const newId = generateId();
       setNodes((nds) => [
         ...nds,
         {
