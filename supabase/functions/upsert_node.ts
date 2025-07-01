@@ -3,11 +3,11 @@ import { z } from 'zod';
 const Action = z.object({
   id: z.string().optional(),
   label: z.string(),
-  target_id: z.number(),
+  target_id: z.string(),
 });
 
 const Node = z.object({
-  id: z.number(),
+  id: z.string(),
   title: z.string(),
   text: z.string(),
   image_url: z.string().nullable().optional(),

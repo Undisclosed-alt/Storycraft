@@ -73,8 +73,8 @@ export default function Editor() {
   };
 
   const save = useCallback(
-    (nodes: Node[], edges: Edge[]) => {
-      api.client
+    async (nodes: Node[], edges: Edge[]) => {
+      await api.client
         .from('nodes')
         .upsert(
           nodes.map((n) => ({
@@ -85,7 +85,7 @@ export default function Editor() {
           }))
         );
 
-      api.client
+      await api.client
         .from('actions')
         .upsert(
           edges.map((e) => ({
@@ -96,7 +96,7 @@ export default function Editor() {
           }))
         );
 
-      api.client.from('revisions').insert({
+      await api.client.from('revisions').insert({
         id: crypto.randomUUID(),
         story_id: 'demo-story',
         data: { nodes, edges },

@@ -1,5 +1,5 @@
 export interface NodeSearchResult {
-  id: number;
+  id: string;
   title: string;
 }
 

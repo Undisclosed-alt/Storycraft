@@ -11,7 +11,7 @@ afterEach(() => {
 });
 
 test('CRUD operations via supabase client', async () => {
-  const node = { id: 1, story_id: 's', text: 'hi' };
+  const node = { id: '1', story_id: 's', text: 'hi' };
 
   // insert
   nock('http://localhost')
@@ -28,7 +28,7 @@ test('CRUD operations via supabase client', async () => {
     .query({ id: 'eq.1', select: '*' })
     .reply(200, [updated]);
 
-  const updateRes = await api.client.from('nodes').update({ text: 'bye' }).eq('id', 1).select();
+  const updateRes = await api.client.from('nodes').update({ text: 'bye' }).eq('id', '1').select();
   expect(updateRes.data).toEqual([updated]);
 
   nock('http://localhost')
@@ -36,6 +36,6 @@ test('CRUD operations via supabase client', async () => {
     .query({ id: 'eq.1' })
     .reply(204);
 
-  const deleteRes = await api.client.from('nodes').delete().eq('id', 1);
+  const deleteRes = await api.client.from('nodes').delete().eq('id', '1');
   expect(deleteRes.error).toBeNull();
 });

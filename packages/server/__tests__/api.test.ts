@@ -12,7 +12,7 @@ test('supabase client loads', () => {
 test('validate_graph RPC call', async () => {
   nock('http://localhost')
     .post('/rest/v1/rpc/validate_graph')
-    .reply(200, [{ nodeId: 1, message: 'dup' }]);
+    .reply(200, [{ nodeId: '1', message: 'dup' }]);
   const res = await api.validate_graph(api.client);
-  expect(res).toEqual([{ nodeId: 1, message: 'dup' }]);
+  expect(res).toEqual([{ nodeId: '1', message: 'dup' }]);
 });
