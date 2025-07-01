@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Node, Edge } from 'reactflow';
 import ImageUpload from './ImageUpload';
 import { formatId } from './utils';
+import { generateId } from './id';
 
 interface Props {
   node: Node;
@@ -29,7 +30,7 @@ export default function NodeEditor({ node, nodes, setNodes, edges, setEdges, set
     if (count > current) {
       const newEdges: Edge[] = [];
       for (let i = current; i < count; i++) {
-        newEdges.push({ id: crypto.randomUUID(), source: node.id, target: node.id, label: '' });
+        newEdges.push({ id: generateId(), source: node.id, target: node.id, label: '' });
       }
       setEdges((eds) => [...eds, ...newEdges]);
     } else if (count < current) {
