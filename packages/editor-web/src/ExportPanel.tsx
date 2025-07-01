@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { Edge, Node } from 'reactflow';
 import { api } from './supabaseClient';
@@ -22,7 +23,7 @@ export default function ExportPanel({
     }
     const issues = await api.validate_graph(api.client);
     if (issues.length > 0) {
-      setError(issues.map((i) => `Node ${i.nodeId}: ${i.message}`).join('\n'));
+      setError(issues.map((i: any) => `Node ${i.nodeId}: ${i.message}`).join('\n'));
       return;
     }
     setError(null);
@@ -39,7 +40,7 @@ export default function ExportPanel({
       id: 'demo-story',
       nodes: nodes.map((n) => ({
         id: n.id,
-        text: (n.data as any).label,
+        text: (n.data as any).text,
         image: (n.data as any).image ?? '',
         actions: actions[n.id] ?? [],
       })),
